@@ -453,18 +453,25 @@ internal val DATE_PART_KEYWORDS: Set<String> = DatePart.values()
 @JvmField internal val ALL_OPERATORS =
     BINARY_OPERATORS + UNARY_OPERATORS + SPECIAL_OPERATORS
 
+enum class OperatorGroups(val precedence: Int) {
+    SET(5),
+    SELECT(6),
+    OR(10),
+    AND(20)
+}
 /**
  * Precedence rank integer is ascending with higher precedence and is in terms of the
  * un-aliased names of the operators.
  */
 @JvmField internal val OPERATOR_PRECEDENCE = mapOf(
+
     // set operator group
-    "intersect"     to 5,
-    "intersect_all" to 5,
-    "except"        to 5,
-    "except_all"    to 5,
-    "union"         to 5,
-    "union_all"     to 5,
+    "intersect"     to OperatorGroups.SET.precedence,
+    "intersect_all" to OperatorGroups.SET.precedence,
+    "except"        to OperatorGroups.SET.precedence,
+    "except_all"    to OperatorGroups.SET.precedence,
+    "union"         to OperatorGroups.SET.precedence,
+    "union_all"     to OperatorGroups.SET.precedence,
 
     // logical group
     "or"            to 10,

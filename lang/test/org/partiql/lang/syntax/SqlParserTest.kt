@@ -3164,6 +3164,27 @@ class SqlParserTest : SqlParserTestBase() {
     )
 
     @Test
+    fun union_select_precedence() = assertExpression(
+        "(SELECT * FROM foo) UNION (SELECT * FROM bar)",
+        """
+        (union
+            (select
+                (project
+                    (list
+                        (project_all)))
+                (from
+                    (id foo case_insensitive)))
+            (select
+                (project
+                    (list
+                        (project_all)))
+                (from
+                    (id bar case_insensitive))))            
+        """,
+        skipPig = false
+    )
+
+    @Test
     fun unionAll() = assertExpression(
         "a UNION ALL b",
         "(union_all (id a case_insensitive) (id b case_insensitive))",
